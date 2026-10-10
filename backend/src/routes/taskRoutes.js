@@ -1,0 +1,13 @@
+const router = require("express").Router();
+const auth = require("../middleware/auth");
+const { requireRoles } = require("../middleware/permissions");
+const c = require("../controllers/taskController");
+router.use(auth);
+router.post("/", requireRoles("OWNER", "ADMIN", "MEMBER"), c.create);
+router.get("/", requireRoles(), c.list);
+router.get("/:id", c.getOne);
+router.put("/:id", c.update);
+router.delete("/:id", requireRoles("OWNER", "ADMIN"), c.remove);
+router.post("/:id/comments", c.addComment);
+router.get("/:id/comments", c.listComments);
+module.exports = router;

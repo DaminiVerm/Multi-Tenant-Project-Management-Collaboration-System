@@ -1,0 +1,11 @@
+const router = require("express").Router();
+const auth = require("../middleware/auth");
+const { requireRoles } = require("../middleware/permissions");
+const c = require("../controllers/organizationController");
+router.use(auth);
+router.post("/", c.create);
+router.get("/", c.list);
+router.get("/:organizationId/members", requireRoles("OWNER", "ADMIN"), c.members);
+router.post("/:organizationId/members", requireRoles("OWNER", "ADMIN"), c.addMember);
+router.delete("/:organizationId/members/:userId", requireRoles("OWNER", "ADMIN"), c.removeMember);
+module.exports = router;
